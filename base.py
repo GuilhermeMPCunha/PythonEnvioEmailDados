@@ -30,7 +30,7 @@ print(FatQtd)
 print('-' * 50)
 
 TckMed = (faturamento['Valor Final'] / FatQtd['Quantidade']).to_frame()
-
+TckMed = TckMed.rename(columns={0: 'Ticket Medio'})
 print(TckMed)
 
 # enviar um email com o relatório
@@ -39,25 +39,26 @@ outlook = win32.Dispatch('outlook.application')
 mail = outlook.CreateItem(0)
 mail.To = 'guilhermempcunha10@gmail.com'
 mail.Subject = 'Relatório de Vendas por Loja'
-mail.HTMLBody = '''
+mail.HTMLBody = f'''
 
-Prezados, 
+<p>Prezados,</p> 
 
-Segue o Relatório de Vendas por cada loja
+<p>Segue o Relatório de Vendas por cada loja</p> 
 
-Faturamento:
-{}
+<p>Faturamento:</p> 
+{faturamento.to_html(formatters={'Valor Final':'R${:,.2f}'.format})}
 
-Quantidade Vendida:
-{}
+<p>Quantidade Vendida:</p> 
+{FatQtd.to_html(formatters={'Quantidade':'{:,}'.format})}
 
-Ticket Medio dos produtos em cada Loja:
-{}
+<p>Ticket Medio dos produtos em cada Loja:</p> 
+{TckMed.to_html(formatters={'Ticket Medio':'R${:,.2f}'.format})}
 
-Qualquer dúvida estou à disposição
+<p>Qualquer dúvida estou à disposição</p> 
 
-att
-João da Silva
+<p>att</p> 
+
+<p>João da Silva</p> 
 
 '''
 
